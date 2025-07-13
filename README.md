@@ -1,56 +1,69 @@
-<!-- ┌─────────────────────────────────────────────────────────────┐
-     │  A11Y-SAAS  –  Accessibility-First Task & Calendar Suite   │
-     └─────────────────────────────────────────────────────────────┘ -->
-<div align="center">
+# React + TypeScript + Vite
 
-<!-- Animated SVG Logo -->
-<svg width="320" height="80" viewBox="0 0 320 80" xmlns="http://www.w3.org/2000/svg" aria-labelledby="logoTitle">
-  <title id="logoTitle">A11y SaaS Logo</title>
-  <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-size="36" fill="#ff0d0d" font-family="Arial Black">
-    <tspan class="a11y">A11y</tspan><tspan dx="8" class="saas">SaaS</tspan>
-  </text>
-  <style>
-    .a11y { animation: popIn .8s ease-out forwards; }
-    .saas { animation: popIn .8s .2s ease-out forwards; transform-origin: center; }
-    @keyframes popIn {
-      0%   { transform: scale(.3); opacity: 0; }
-      100% { transform: scale(1); opacity: 1; }
-    }
-  </style>
-</svg>
+This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-<!-- Badges -->
-[![CI](https://github.com/tonycondone/a11y-saas/actions/workflows/ci.yml/badge.svg)](https://github.com/tonycondone/a11y-saas/actions)
-[![Vercel](https://img.shields.io/github/deployments/tonycondone/a11y-saas/production?label=vercel&logo=vercel)](https://a11y-saas.vercel.app)
-[![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
-[![WCAG 2.2 AA](https://img.shields.io/badge/WCAG-2.2%20AA-blueviolet)](https://www.w3.org/WAI/WCAG22/quickref)
+Currently, two official plugins are available:
 
-**🚀 A fully-accessible task & calendar app built with React, TypeScript and screen-reader love.**
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
 
-</div>
+## Expanding the ESLint configuration
 
----
+If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
 
-## 🌟 Live Demo
-> https://a11y-saas.vercel.app
+```js
+export default tseslint.config([
+  globalIgnores(['dist']),
+  {
+    files: ['**/*.{ts,tsx}'],
+    extends: [
+      // Other configs...
 
-Keyboard-first, screen-reader friendly, motion-respectful.  
-Try **Tab**, **Shift+Tab**, **Enter**, or activate voice input with **⌘+K** (macOS) / **Ctrl+K** (Windows).
+      // Remove tseslint.configs.recommended and replace with this
+      ...tseslint.configs.recommendedTypeChecked,
+      // Alternatively, use this for stricter rules
+      ...tseslint.configs.strictTypeChecked,
+      // Optionally, add this for stylistic rules
+      ...tseslint.configs.stylisticTypeChecked,
 
----
+      // Other configs...
+    ],
+    languageOptions: {
+      parserOptions: {
+        project: ['./tsconfig.node.json', './tsconfig.app.json'],
+        tsconfigRootDir: import.meta.dirname,
+      },
+      // other options...
+    },
+  },
+])
+```
 
-## 📦 Quick Start
+You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
 
-```bash
-# 1. Clone
-git clone https://github.com/tonycondone/a11y-saas.git
-cd a11y-saas
+```js
+// eslint.config.js
+import reactX from 'eslint-plugin-react-x'
+import reactDom from 'eslint-plugin-react-dom'
 
-# 2. Install
-npm ci
-
-# 3. Dev server (localhost:5173)
-npm run dev
-
-# 4. Run accessibility tests
-npm run test:axe
+export default tseslint.config([
+  globalIgnores(['dist']),
+  {
+    files: ['**/*.{ts,tsx}'],
+    extends: [
+      // Other configs...
+      // Enable lint rules for React
+      reactX.configs['recommended-typescript'],
+      // Enable lint rules for React DOM
+      reactDom.configs.recommended,
+    ],
+    languageOptions: {
+      parserOptions: {
+        project: ['./tsconfig.node.json', './tsconfig.app.json'],
+        tsconfigRootDir: import.meta.dirname,
+      },
+      // other options...
+    },
+  },
+])
+```
